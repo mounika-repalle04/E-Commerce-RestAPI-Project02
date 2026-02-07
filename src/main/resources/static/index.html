@@ -57,6 +57,10 @@ function addItem() {
             const data = JSON.parse(text);
             document.getElementById("result").innerText =
                 JSON.stringify(data, null, 2);
+            
+            document.getElementById("name").value = "";
+            document.getElementById("desc").value = "";
+            document.getElementById("price").value = "";
         } catch {
             document.getElementById("result").innerText = text;
         }

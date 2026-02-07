@@ -28,7 +28,16 @@
 
 <script>
 function addItem() {
-    fetch("/E-Commerce-RestAPI-Project/api/items", {
+	const name = document.getElementById("name").value.trim();
+    const desc = document.getElementById("desc").value.trim();
+    const price = Number(document.getElementById("price").value);
+
+    if (!name || !desc || price <= 0 || isNaN(price)) {
+        document.getElementById("result").innerText =
+            "Please enter valid item details";
+        return;
+    }
+    fetch("https://ecommerce-restapi-project02.onrender.com/api/items", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"

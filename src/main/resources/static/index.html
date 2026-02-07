@@ -16,9 +16,9 @@
 <div class="card">
     <h2>Add Item</h2>
 
-    <input id="name" placeholder="Item Name">
-    <input id="desc" placeholder="Description">
-    <input id="price" placeholder="Price">
+    <input id="name" placeholder="Item Name" type="text">
+<input id="desc" placeholder="Description" type="text">
+<input id="price" placeholder="Price" type="number" step="0.01" min="0.01">
 
     <button onclick="addItem()">Add Item</button>
 
@@ -28,36 +28,37 @@
 
 <script>
 function addItem() {
-	const name = document.getElementById("name").value.trim();
-    const desc = document.getElementById("desc").value.trim();
-    const price = Number(document.getElementById("price").value);
 
-    if (!name || !desc || price <= 0 || isNaN(price)) {
+    const name = document.getElementById("name").value.trim();
+    const desc = document.getElementById("desc").value.trim();
+    const priceValue = document.getElementById("price").value;
+    const price = parseFloat(priceValue);
+
+    if (name === "" || desc === "" || priceValue === "" || isNaN(price) || price <= 0) {
         document.getElementById("result").innerText =
-            "Please enter valid item details";
+            "Please enter valid item details (price must be > 0)";
         return;
     }
-    fetch("https://ecommerce-restapi-project02.onrender.com/api/items", {
+
+    fetch("/api/items", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            name: document.getElementById("name").value,
-            description: document.getElementById("desc").value,
-            price: Number(document.getElementById("price").value)
+            name: name,
+            description: desc,
+            price: price
         })
     })
     .then(async response => {
-        const text = await response.text();   
-
+        const text = await response.text();
         try {
-            const data = JSON.parse(text);    // parse only if JSON
+            const data = JSON.parse(text);
             document.getElementById("result").innerText =
                 JSON.stringify(data, null, 2);
-        } catch (e) {
-            document.getElementById("result").innerText =
-                "Validation error: Please enter valid data";
+        } catch {
+            document.getElementById("result").innerText = text;
         }
     })
     .catch(error => {

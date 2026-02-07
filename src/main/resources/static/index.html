@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>E-Commerce Demo</title>
+    <style>
+        body { font-family: Arial; background:#f4f6f8; }
+        .card { width:400px; margin:50px auto; background:#fff;
+                padding:20px; border-radius:8px; }
+        input, button { width:100%; padding:8px; margin:6px 0; }
+        button { background:#0d6efd; color:#fff; border:none; }
+        pre { background:#eee; padding:10px; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>Add Item</h2>
+
+    <input id="name" placeholder="Item Name">
+    <input id="desc" placeholder="Description">
+    <input id="price" placeholder="Price">
+
+    <button onclick="addItem()">Add Item</button>
+
+    <h3>Response</h3>
+    <pre id="result"></pre>
+</div>
+
+<script>
+function addItem() {
+    fetch("/E-Commerce-RestAPI-Project/api/items", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            name: document.getElementById("name").value,
+            description: document.getElementById("desc").value,
+            price: Number(document.getElementById("price").value)
+        })
+    })
+    .then(async response => {
+        const text = await response.text();   
+
+        try {
+            const data = JSON.parse(text);    // parse only if JSON
+            document.getElementById("result").innerText =
+                JSON.stringify(data, null, 2);
+        } catch (e) {
+            document.getElementById("result").innerText =
+                "Validation error: Please enter valid data";
+        }
+    })
+    .catch(error => {
+        document.getElementById("result").innerText =
+            "Error: " + error;
+    });
+}
+</script>
+
+</body>
+</html>

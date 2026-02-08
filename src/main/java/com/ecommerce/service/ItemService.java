@@ -22,4 +22,8 @@ public class ItemService {
                 .filter(i -> i.getId().equals(id))
                 .findFirst();
     }
+   
+    public List<Item> getAllItems() {
+        return new ArrayList<>(items); // return a copy to avoid external modification
+    }
 }
